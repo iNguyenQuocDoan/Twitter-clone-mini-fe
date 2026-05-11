@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { Sparkles, AlertCircle } from 'lucide-react'
 import { useTimeline } from '../hooks/use-tweets'
 import { TweetCard } from './TweetCard'
 import { TweetCardSkeleton } from './TweetCardSkeleton'
@@ -26,16 +27,21 @@ export function Timeline() {
 
   if (isLoading) {
     return (
-      <div>
-        {Array.from({ length: 5 }).map((_, i) => <TweetCardSkeleton key={i} />)}
+      <div className="divide-y divide-border">
+        {Array.from({ length: 5 }, (_, i) => (
+          <TweetCardSkeleton key={`skeleton-${i}`} />
+        ))}
       </div>
     )
   }
 
   if (isError) {
     return (
-      <div className="p-8 text-center text-muted-foreground">
-        <p>Không thể tải timeline. Vui lòng thử lại.</p>
+      <div className="flex flex-col items-center gap-3 px-6 py-16 text-center">
+        <AlertCircle className="size-8 text-muted-foreground" aria-hidden />
+        <p className="text-sm text-muted-foreground max-w-xs">
+          Không thể tải timeline. Hãy thử lại sau giây lát.
+        </p>
       </div>
     )
   }
@@ -44,14 +50,17 @@ export function Timeline() {
 
   if (tweets.length === 0) {
     return (
-      <div className="p-8 text-center text-muted-foreground">
-        <p>Chưa có tweet nào. Hãy theo dõi người khác để xem feed của họ!</p>
+      <div className="flex flex-col items-center gap-3 px-6 py-16 text-center">
+        <Sparkles className="size-8 text-muted-foreground" aria-hidden />
+        <p className="text-sm text-muted-foreground max-w-xs">
+          Chưa có tweet nào. Hãy theo dõi người khác để xem feed của họ!
+        </p>
       </div>
     )
   }
 
   return (
-    <div>
+    <div className="divide-y divide-border">
       {tweets.map((tweet) => (
         <TweetCard key={tweet._id} tweet={tweet} />
       ))}
@@ -60,7 +69,9 @@ export function Timeline() {
         {isFetchingNextPage ? (
           <TweetCardSkeleton />
         ) : hasNextPage ? (
-          <Button variant="ghost" onClick={() => fetchNextPage()}>Tải thêm</Button>
+          <Button variant="ghost" onClick={() => fetchNextPage()}>
+            Tải thêm
+          </Button>
         ) : (
           <p className="text-sm text-muted-foreground">Đã tải hết tweet</p>
         )}

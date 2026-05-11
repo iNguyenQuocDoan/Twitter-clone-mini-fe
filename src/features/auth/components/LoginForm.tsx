@@ -26,29 +26,47 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Đăng nhập</CardTitle>
-        <CardDescription>Chào mừng bạn quay trở lại</CardDescription>
+    <Card className="border-border">
+      <CardHeader className="space-y-1 text-center">
+        <CardTitle className="text-xl">Đăng nhập</CardTitle>
+        <CardDescription>Chào mừng bạn quay lại</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="name@example.com" {...register('email')} />
-            {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              autoComplete="email"
+              {...register('email')}
+              aria-invalid={!!errors.email}
+            />
+            {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
           </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="password">Mật khẩu</Label>
-            <Input id="password" type="password" placeholder="••••••••" {...register('password')} />
-            {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
-          </div>
-
-          <div className="text-right">
-            <Link href="/forgot-password" className="text-sm text-primary hover:underline">
-              Quên mật khẩu?
-            </Link>
+          <div className="space-y-1.5">
+            <div className="flex items-baseline justify-between">
+              <Label htmlFor="password">Mật khẩu</Label>
+              <Link
+                href="/forgot-password"
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                Quên mật khẩu?
+              </Link>
+            </div>
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              autoComplete="current-password"
+              {...register('password')}
+              aria-invalid={!!errors.password}
+            />
+            {errors.password && (
+              <p className="text-xs text-destructive">{errors.password.message}</p>
+            )}
           </div>
 
           <Button type="submit" className="w-full" disabled={isPending}>
@@ -57,7 +75,7 @@ export function LoginForm() {
 
           <p className="text-center text-sm text-muted-foreground">
             Chưa có tài khoản?{' '}
-            <Link href="/register" className="text-primary hover:underline">
+            <Link href="/register" className="text-foreground hover:underline">
               Đăng ký
             </Link>
           </p>

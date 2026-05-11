@@ -2,12 +2,12 @@ import { TweetComposer, Timeline } from '@/features/tweets'
 
 export default function HomePage() {
   return (
-    <div>
-      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b px-4 py-3">
-        <h1 className="font-bold text-xl">Trang chủ</h1>
-      </div>
+    <>
+      <header className="sticky top-0 z-10 bg-background/70 backdrop-blur-md border-b border-border px-4 py-3">
+        <h1 className="text-[15px] font-semibold tracking-tight">Trang chủ</h1>
+      </header>
       <TweetComposer />
       <Timeline />
-    </div>
+    </>
   )
 }

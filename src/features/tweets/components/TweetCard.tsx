@@ -3,11 +3,10 @@
 import Link from 'next/link'
 import { Heart, MessageCircle, Repeat2, Bookmark } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { UserAvatar } from '@/features/users/components/UserAvatar'
+import { UserAvatar } from '@/features/users'
 import { formatRelativeTime, formatCount } from '@/shared/utils/format'
-import { useLike, useUnlike } from '@/features/interactions/hooks/use-likes'
-import { useBookmark, useUnbookmark } from '@/features/interactions/hooks/use-bookmarks'
+import { useLike, useUnlike, useBookmark, useUnbookmark } from '@/features/interactions'
+import { cn } from '@/lib/utils'
 import type { Tweet } from '../types'
 
 interface TweetCardProps {
@@ -31,71 +30,110 @@ export function TweetCard({ tweet }: TweetCardProps) {
   }
 
   return (
-    <article className="p-4 hover:bg-muted/30 transition-colors">
+    <article className="px-4 py-3 hover:bg-muted/30 transition-colors">
       <div className="flex gap-3">
-        <Link href={`/profile/${tweet.user?.username}`}>
+        <Link href={`/profile/${tweet.user?.username}`} className="shrink-0">
           <UserAvatar src={tweet.user?.avatar} name={tweet.user?.name} />
         </Link>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <Link href={`/profile/${tweet.user?.username}`} className="font-semibold hover:underline truncate">
+          <div className="flex items-center gap-1.5 text-[15px]">
+            <Link
+              href={`/profile/${tweet.user?.username}`}
+              className="font-semibold hover:underline truncate"
+            >
               {tweet.user?.name}
             </Link>
-            <span className="text-muted-foreground text-sm">
-              @{tweet.user?.username} · {formatRelativeTime(tweet.created_at)}
+            <span className="text-muted-foreground truncate">@{tweet.user?.username}</span>
+            <span className="text-muted-foreground" aria-hidden>
+              ·
             </span>
+            <time className="text-muted-foreground" dateTime={tweet.created_at}>
+              {formatRelativeTime(tweet.created_at)}
+            </time>
           </div>
 
-          <Link href={`/tweets/${tweet._id}`}>
-            <p className="mt-1 text-sm whitespace-pre-wrap break-words">{tweet.content}</p>
+          <Link href={`/tweets/${tweet._id}`} className="block">
+            <p className="mt-0.5 text-[15px] leading-snug whitespace-pre-wrap wrap-break-word">
+              {tweet.content}
+            </p>
 
             {tweet.medias?.length > 0 && (
-              <div className="mt-2 grid grid-cols-2 gap-1 rounded-xl overflow-hidden">
+              <div className="mt-2 grid grid-cols-2 gap-1 rounded-xl overflow-hidden border border-border">
                 {tweet.medias.map((media, i) =>
                   media.type === 'image' ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img key={i} src={media.url} alt="" className="w-full object-cover max-h-64" />
-                  ) : null
+                  ) : null,
                 )}
               </div>
             )}
           </Link>
 
-          <div className="flex items-center gap-6 mt-3 text-muted-foreground">
-            <Button variant="ghost" size="sm" className="gap-1.5 h-8 px-2">
-              <MessageCircle className="size-4" />
-              <span className="text-xs">{formatCount(tweet.comment_count || 0)}</span>
-            </Button>
-
-            <Button variant="ghost" size="sm" className="gap-1.5 h-8 px-2">
-              <Repeat2 className="size-4" />
-              <span className="text-xs">{formatCount(tweet.retweet_count || 0)}</span>
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              className={`gap-1.5 h-8 px-2 ${tweet.is_liked ? 'text-red-500' : ''}`}
+          <div className="flex items-center justify-between mt-2 -ml-2 text-muted-foreground">
+            <ActionButton
+              icon={<MessageCircle className="size-4.5" />}
+              count={tweet.comment_count}
+              label={`Bình luận, ${tweet.comment_count || 0}`}
+              hoverColor="hover:text-sky-500"
+            />
+            <ActionButton
+              icon={<Repeat2 className="size-4.5" />}
+              count={tweet.retweet_count}
+              label={`Đăng lại, ${tweet.retweet_count || 0}`}
+              hoverColor="hover:text-emerald-500"
+            />
+            <ActionButton
+              icon={<Heart className={cn('size-4.5', tweet.is_liked && 'fill-current')} />}
+              count={tweet.like_count}
+              label={`${tweet.is_liked ? 'Bỏ thích' : 'Thích'}, ${tweet.like_count || 0}`}
               onClick={handleLike}
-            >
-              <Heart className={`size-4 ${tweet.is_liked ? 'fill-current' : ''}`} />
-              <span className="text-xs">{formatCount(tweet.like_count || 0)}</span>
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              className={`gap-1.5 h-8 px-2 ${tweet.is_bookmarked ? 'text-primary' : ''}`}
+              pressed={tweet.is_liked}
+              activeColor="text-rose-500"
+              hoverColor="hover:text-rose-500"
+            />
+            <ActionButton
+              icon={<Bookmark className={cn('size-4.5', tweet.is_bookmarked && 'fill-current')} />}
+              count={tweet.bookmark_count}
+              label={`${tweet.is_bookmarked ? 'Bỏ lưu' : 'Lưu'}, ${tweet.bookmark_count || 0}`}
               onClick={handleBookmark}
-            >
-              <Bookmark className={`size-4 ${tweet.is_bookmarked ? 'fill-current' : ''}`} />
-              <span className="text-xs">{formatCount(tweet.bookmark_count || 0)}</span>
-            </Button>
+              pressed={tweet.is_bookmarked}
+              activeColor="text-primary"
+              hoverColor="hover:text-primary"
+            />
           </div>
         </div>
       </div>
-      <Separator className="mt-4" />
     </article>
+  )
+}
+
+interface ActionButtonProps {
+  icon: React.ReactNode
+  count?: number
+  label: string
+  onClick?: () => void
+  pressed?: boolean
+  activeColor?: string
+  hoverColor: string
+}
+
+function ActionButton({ icon, count, label, onClick, pressed, activeColor, hoverColor }: ActionButtonProps) {
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={onClick}
+      aria-label={label}
+      aria-pressed={onClick ? pressed : undefined}
+      className={cn(
+        'h-8 px-2 gap-1.5 rounded-full transition-colors',
+        hoverColor,
+        pressed && activeColor,
+      )}
+    >
+      {icon}
+      <span className="text-xs tabular-nums">{formatCount(count || 0)}</span>
+    </Button>
   )
 }
