@@ -1,5 +1,5 @@
 import apiClient from '@/shared/services/api-client'
-import { ApiResponse, PaginatedResult } from '@/shared/types'
+import { ApiResponse, PaginatedApiResponse } from '@/shared/types'
 import type { Tweet, CreateTweetBody, TimelineQuery } from '../types'
 
 export const tweetsService = {
@@ -10,5 +10,5 @@ export const tweetsService = {
     apiClient.get<ApiResponse<Tweet>>(`/tweets/${tweetId}`),
 
   getTimeline: (query: TimelineQuery = {}) =>
-    apiClient.get<ApiResponse<PaginatedResult<Tweet>>>('/tweets/timeline', { params: query }),
+    apiClient.get<PaginatedApiResponse<Tweet>>('/tweets/timeline', { params: query }),
 }

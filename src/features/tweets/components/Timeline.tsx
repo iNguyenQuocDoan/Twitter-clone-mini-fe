@@ -40,7 +40,7 @@ export function Timeline() {
     )
   }
 
-  const tweets = data?.pages.flatMap((p) => p.tweets) ?? []
+  const tweets = data?.pages.flatMap((p) => p.data) ?? []
 
   if (tweets.length === 0) {
     return (

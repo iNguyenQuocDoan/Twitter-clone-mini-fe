@@ -12,13 +12,13 @@ export const profileKeys = {
 export const useMe = () =>
   useQuery({
     queryKey: profileKeys.me,
-    queryFn: () => usersService.getMe().then((r) => r.data.result),
+    queryFn: () => usersService.getMe().then((r) => r.data.data),
   })
 
 export const useProfile = (username: string) =>
   useQuery({
     queryKey: profileKeys.profile(username),
-    queryFn: () => usersService.getProfile(username).then((r) => r.data.result),
+    queryFn: () => usersService.getProfile(username).then((r) => r.data.data),
     enabled: !!username,
   })
 

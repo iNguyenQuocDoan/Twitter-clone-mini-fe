@@ -15,16 +15,18 @@ export const useTimeline = () =>
   useInfiniteQuery({
     queryKey: tweetKeys.timeline(),
     queryFn: ({ pageParam = 1 }) =>
-      tweetsService.getTimeline({ page: pageParam as number, limit: 10 }).then((r) => r.data.result),
+      tweetsService
+        .getTimeline({ page: pageParam as number, limit: 10 })
+        .then((r) => r.data),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
-      lastPage.page < lastPage.total_pages ? lastPage.page + 1 : undefined,
+      lastPage.meta.page < lastPage.meta.total_pages ? lastPage.meta.page + 1 : undefined,
   })
 
 export const useTweet = (tweetId: string) =>
   useQuery({
     queryKey: tweetKeys.detail(tweetId),
-    queryFn: () => tweetsService.getTweet(tweetId).then((r) => r.data.result),
+    queryFn: () => tweetsService.getTweet(tweetId).then((r) => r.data.data),
     enabled: !!tweetId,
   })
 

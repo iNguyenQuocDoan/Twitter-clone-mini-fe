@@ -72,7 +72,7 @@ apiClient.interceptors.response.use(
           refresh_token: refreshToken,
         })
 
-        const { access_token, refresh_token } = data.result
+        const { access_token, refresh_token } = data.data
         setTokens(access_token, refresh_token)
         processQueue(null, access_token)
 

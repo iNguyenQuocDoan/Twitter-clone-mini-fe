@@ -1,17 +1,28 @@
 export interface ApiResponse<T = unknown> {
+  success: boolean
   message: string
-  result: T
+  data: T
 }
 
-export interface PaginatedResult<T> {
-  tweets: T[]
-  total: number
+export interface PaginationMeta {
   page: number
   limit: number
+  total: number
   total_pages: number
 }
 
-export interface ApiError {
+export interface PaginatedApiResponse<T> {
+  success: boolean
   message: string
-  errors?: Record<string, { msg: string }>
+  data: T[]
+  meta: PaginationMeta
+}
+
+export interface ApiError {
+  success: false
+  error: {
+    code: string
+    message: string
+    details?: Record<string, { msg: string }>
+  }
 }

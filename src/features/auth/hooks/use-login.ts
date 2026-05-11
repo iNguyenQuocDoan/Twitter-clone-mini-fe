@@ -15,11 +15,11 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (body: LoginBody) => authService.login(body),
     onSuccess: async (res) => {
-      const { access_token, refresh_token } = res.data.result
+      const { access_token, refresh_token } = res.data.data
       setTokens(access_token, refresh_token)
 
       const meRes = await usersService.getMe()
-      setUser(meRes.data.result)
+      setUser(meRes.data.data)
       toast.success('Đăng nhập thành công!')
     },
     onError: (error: AxiosError<{ message: string }>) => {
