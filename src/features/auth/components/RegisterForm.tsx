@@ -26,42 +26,76 @@ export function RegisterForm() {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Tạo tài khoản</CardTitle>
+    <Card className="border-border">
+      <CardHeader className="space-y-1 text-center">
+        <CardTitle className="text-xl">Tạo tài khoản</CardTitle>
         <CardDescription>Tham gia cộng đồng ngay hôm nay</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <Label htmlFor="name">Tên hiển thị</Label>
-            <Input id="name" placeholder="Nguyễn Văn A" {...register('name')} />
-            {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
+            <Input
+              id="name"
+              placeholder="Nguyễn Văn A"
+              autoComplete="name"
+              {...register('name')}
+              aria-invalid={!!errors.name}
+            />
+            {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="name@example.com" {...register('email')} />
-            {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              autoComplete="email"
+              {...register('email')}
+              aria-invalid={!!errors.email}
+            />
+            {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <Label htmlFor="date_of_birth">Ngày sinh</Label>
-            <Input id="date_of_birth" type="date" {...register('date_of_birth')} />
-            {errors.date_of_birth && <p className="text-sm text-destructive">{errors.date_of_birth.message}</p>}
+            <Input
+              id="date_of_birth"
+              type="date"
+              {...register('date_of_birth')}
+              aria-invalid={!!errors.date_of_birth}
+            />
+            {errors.date_of_birth && (
+              <p className="text-xs text-destructive">{errors.date_of_birth.message}</p>
+            )}
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <Label htmlFor="password">Mật khẩu</Label>
-            <Input id="password" type="password" placeholder="••••••••" {...register('password')} />
-            {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              autoComplete="new-password"
+              {...register('password')}
+              aria-invalid={!!errors.password}
+            />
+            {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <Label htmlFor="confirm_password">Xác nhận mật khẩu</Label>
-            <Input id="confirm_password" type="password" placeholder="••••••••" {...register('confirm_password')} />
+            <Input
+              id="confirm_password"
+              type="password"
+              placeholder="••••••••"
+              autoComplete="new-password"
+              {...register('confirm_password')}
+              aria-invalid={!!errors.confirm_password}
+            />
             {errors.confirm_password && (
-              <p className="text-sm text-destructive">{errors.confirm_password.message}</p>
+              <p className="text-xs text-destructive">{errors.confirm_password.message}</p>
             )}
           </div>
 
@@ -71,7 +105,7 @@ export function RegisterForm() {
 
           <p className="text-center text-sm text-muted-foreground">
             Đã có tài khoản?{' '}
-            <Link href="/login" className="text-primary hover:underline">
+            <Link href="/login" className="text-foreground hover:underline">
               Đăng nhập
             </Link>
           </p>

@@ -26,9 +26,9 @@ export function ForgotPasswordForm() {
   } = useForm<ForgotPasswordFormValues>({ resolver: zodResolver(forgotPasswordSchema) })
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Quên mật khẩu</CardTitle>
+    <Card className="border-border">
+      <CardHeader className="space-y-1 text-center">
+        <CardTitle className="text-xl">Quên mật khẩu</CardTitle>
         <CardDescription>Nhập email để nhận link đặt lại mật khẩu</CardDescription>
       </CardHeader>
       <CardContent>
@@ -37,16 +37,23 @@ export function ForgotPasswordForm() {
             <p className="text-sm text-muted-foreground">
               Kiểm tra hộp thư của bạn và nhấn vào link để đặt lại mật khẩu.
             </p>
-            <Link href="/login" className="text-primary hover:underline text-sm">
+            <Link href="/login" className="text-sm text-foreground hover:underline">
               Quay lại đăng nhập
             </Link>
           </div>
         ) : (
           <form onSubmit={handleSubmit((d) => mutate(d))} className="space-y-4">
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="name@example.com" {...register('email')} />
-              {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+              <Input
+                id="email"
+                type="email"
+                placeholder="name@example.com"
+                autoComplete="email"
+                {...register('email')}
+                aria-invalid={!!errors.email}
+              />
+              {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
             </div>
 
             <Button type="submit" className="w-full" disabled={isPending}>
@@ -54,7 +61,7 @@ export function ForgotPasswordForm() {
             </Button>
 
             <p className="text-center text-sm">
-              <Link href="/login" className="text-primary hover:underline">
+              <Link href="/login" className="text-foreground hover:underline">
                 Quay lại đăng nhập
               </Link>
             </p>
