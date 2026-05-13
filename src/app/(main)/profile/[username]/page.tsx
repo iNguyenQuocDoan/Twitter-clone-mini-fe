@@ -4,7 +4,12 @@ import { use } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { ProfileHeader, ProfileHeaderSkeleton, useProfile } from '@/features/users'
+import {
+  ProfileHeader,
+  ProfileHeaderSkeleton,
+  ProfileTweets,
+  useProfile,
+} from '@/features/users'
 
 export default function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = use(params)
@@ -12,21 +17,42 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
   const { data: profile, isLoading, isError } = useProfile(username)
 
   return (
-    <div>
-      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b px-4 py-3 flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => router.back()}>
-          <ArrowLeft className="size-5" />
+    <>
+      <header className="sticky top-0 z-10 bg-background/70 backdrop-blur-md border-b border-border px-4 py-3 flex items-center gap-3">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => router.back()}
+          aria-label="Quay lại"
+          className="size-8"
+        >
+          <ArrowLeft className="size-4" />
         </Button>
-        <h1 className="font-bold text-xl">{profile?.name || 'Hồ sơ'}</h1>
-      </div>
+        <div className="min-w-0">
+          <h1 className="text-[15px] font-semibold tracking-tight truncate">
+            {profile?.name || (isLoading ? 'Đang tải…' : 'Hồ sơ')}
+          </h1>
+          {profile && (
+            <p className="text-xs text-muted-foreground">
+              {profile.tweets_count ?? 0} tweet
+            </p>
+          )}
+        </div>
+      </header>
 
       {isLoading && <ProfileHeaderSkeleton />}
       {isError && (
-        <div className="p-8 text-center text-muted-foreground">
-          <p>Không tìm thấy người dùng này.</p>
+        <div className="px-6 py-12 text-center text-sm text-muted-foreground">
+          Không tìm thấy người dùng này.
         </div>
       )}
-      {profile && <ProfileHeader profile={profile} />}
-    </div>
+      {profile && (
+        <>
+          <ProfileHeader profile={profile} />
+          <div className="border-t border-border" />
+          <ProfileTweets username={profile.username} />
+        </>
+      )}
+    </>
   )
 }

@@ -1,5 +1,6 @@
 import apiClient from '@/shared/services/api-client'
-import { ApiResponse } from '@/shared/types'
+import { ApiResponse, PaginatedApiResponse } from '@/shared/types'
+import type { Tweet, TimelineQuery } from '@/features/tweets/types'
 import type { UserProfile, UpdateMeBody, ChangePasswordBody, FollowBody } from '../types'
 
 export const usersService = {
@@ -7,6 +8,11 @@ export const usersService = {
 
   getProfile: (username: string) =>
     apiClient.get<ApiResponse<UserProfile>>(`/users/${username}`),
+
+  getUserTweets: (username: string, query: TimelineQuery = {}) =>
+    apiClient.get<PaginatedApiResponse<Tweet>>(`/users/${username}/tweets`, {
+      params: query,
+    }),
 
   updateMe: (body: UpdateMeBody) =>
     apiClient.patch<ApiResponse<UserProfile>>('/users/me', body),

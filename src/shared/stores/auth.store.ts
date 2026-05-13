@@ -1,6 +1,11 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
+export enum UserRole {
+  User = 0,
+  Admin = 1,
+}
+
 export interface AuthUser {
   _id: string
   name: string
@@ -12,6 +17,7 @@ export interface AuthUser {
   location: string
   website: string
   verify: number
+  role?: UserRole
 }
 
 interface AuthState {

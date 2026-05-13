@@ -1,3 +1,8 @@
+export enum UserRole {
+  User = 0,
+  Admin = 1,
+}
+
 export interface UserProfile {
   _id: string
   name: string
@@ -9,8 +14,13 @@ export interface UserProfile {
   location: string
   website: string
   verify: number
+  role?: UserRole
   created_at: string
   updated_at: string
+  followers_count?: number
+  following_count?: number
+  tweets_count?: number
+  is_followed?: boolean
 }
 
 export interface UpdateMeBody {

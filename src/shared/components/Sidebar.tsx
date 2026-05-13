@@ -2,11 +2,12 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Search, Bell, Bookmark, User, LogOut, Bird } from 'lucide-react'
+import { Home, Search, Bell, Bookmark, User, LogOut, Bird, Shield } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { UserAvatar } from '@/features/users'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRole } from '@/shared/stores/auth.store'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
 import { cn } from '@/lib/utils'
 
@@ -61,7 +62,15 @@ export function Sidebar() {
           <>
             <UserAvatar src={user.avatar} name={user.name} size="sm" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{user.name}</p>
+              <p className="text-sm font-medium truncate flex items-center gap-1">
+                {user.name}
+                {user.role === UserRole.Admin && (
+                  <Shield
+                    className="size-3 text-amber-500 shrink-0"
+                    aria-label="Admin"
+                  />
+                )}
+              </p>
               <p className="text-xs text-muted-foreground truncate">@{user.username || user.email}</p>
             </div>
             <ThemeToggle />
