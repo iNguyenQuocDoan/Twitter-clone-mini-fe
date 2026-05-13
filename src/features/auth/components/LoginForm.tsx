@@ -2,7 +2,6 @@
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,7 +11,6 @@ import { useLogin } from '../hooks/use-login'
 import { loginSchema, type LoginFormValues } from '../utils/schemas'
 
 export function LoginForm() {
-  const router = useRouter()
   const { mutate: login, isPending } = useLogin()
 
   const {
@@ -22,7 +20,8 @@ export function LoginForm() {
   } = useForm<LoginFormValues>({ resolver: zodResolver(loginSchema) })
 
   const onSubmit = (data: LoginFormValues) => {
-    login(data, { onSuccess: () => router.push('/home') })
+    // Redirect happens inside useLogin (role-aware: Admin → /admin, else /home)
+    login(data)
   }
 
   return (

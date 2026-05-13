@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Bird, MessageSquare, Users, Bookmark } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useAuthStore } from '@/shared/stores/auth.store'
+import { useAuthStore, UserRole } from '@/shared/stores/auth.store'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
 
 const features = [
@@ -19,7 +19,8 @@ export default function LandingPage() {
   const user = useAuthStore((s) => s.user)
 
   useEffect(() => {
-    if (user) router.replace('/home')
+    if (!user) return
+    router.replace(user.role === UserRole.Admin ? '/admin' : '/home')
   }, [user, router])
 
   return (

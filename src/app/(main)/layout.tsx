@@ -1,6 +1,7 @@
 import { Sidebar } from '@/shared/components/Sidebar'
 import { RightRail } from '@/shared/components/RightRail'
 import { AuthGuard } from '@/shared/components/AuthGuard'
+import { AdminViewingBanner } from '@/shared/components/AdminViewingBanner'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,6 +13,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         >
           Bỏ qua đến nội dung chính
         </a>
+        <AdminViewingBanner />
         <div className="mx-auto flex max-w-7xl">
           <Sidebar />
           <main

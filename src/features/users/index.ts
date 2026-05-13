@@ -3,4 +3,5 @@ export { ProfileHeader, ProfileHeaderSkeleton } from './components/ProfileHeader
 export { ProfileTweets } from './components/ProfileTweets'
 export { usersService } from './services/users.service'
 export { useMe, useProfile, useUserTweets, useFollow, useUnfollow } from './hooks/use-profile'
+export { UserRole } from './types'
 export type * from './types'
