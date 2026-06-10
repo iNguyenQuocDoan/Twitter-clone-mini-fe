@@ -3,4 +3,5 @@ export { useAdminStats, useAdminUsers, useUpdateAdminUser, adminKeys } from './h
 export { AdminSidebar } from './components/AdminSidebar'
 export { StatCard } from './components/StatCard'
 export { UserTable } from './components/UserTable'
+export { AdminMessagesView } from './components/AdminMessagesView'
 export type * from './types'

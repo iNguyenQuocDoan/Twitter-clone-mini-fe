@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { MapPin, Link2, Calendar, Shield } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -65,9 +66,11 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
           />
 
           {isOwner ? (
-            <Button variant="outline" size="sm" disabled aria-label="Chỉnh sửa hồ sơ (đang phát triển)">
-              Chỉnh sửa hồ sơ
-            </Button>
+            <Link href="/settings">
+              <Button variant="outline" size="sm">
+                Chỉnh sửa hồ sơ
+              </Button>
+            </Link>
           ) : !currentUser ? null : isFollowed ? (
             <Button
               variant="outline"

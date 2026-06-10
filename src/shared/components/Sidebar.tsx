@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Search, Bell, Bookmark, User, LogOut, Bird, Shield } from 'lucide-react'
+import { Home, Search, Bell, Bookmark, User, LogOut, Bird, Shield, Settings, Mail } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { UserAvatar } from '@/features/users'
@@ -15,6 +15,7 @@ const navItems = [
   { icon: Home, label: 'Trang chủ', href: '/home' },
   { icon: Search, label: 'Tìm kiếm', href: '/explore' },
   { icon: Bell, label: 'Thông báo', href: '/notifications' },
+  { icon: Mail, label: 'Tin nhắn', href: '/messages' },
   { icon: Bookmark, label: 'Bookmarks', href: '/bookmarks' },
   { icon: User, label: 'Hồ sơ', href: '/profile' },
 ]
@@ -73,6 +74,11 @@ export function Sidebar() {
               </p>
               <p className="text-xs text-muted-foreground truncate">@{user.username || user.email}</p>
             </div>
+            <Link href="/settings">
+              <Button variant="ghost" size="icon" aria-label="Cài đặt" title="Cài đặt">
+                <Settings className="size-4" />
+              </Button>
+            </Link>
             <ThemeToggle />
             <Button
               variant="ghost"

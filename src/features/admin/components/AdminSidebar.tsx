@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Users, Eye, Shield, LogOut } from 'lucide-react'
+import { LayoutDashboard, Users, MessageSquare, Eye, Shield, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils'
 const adminNav = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/admin' },
   { icon: Users, label: 'Người dùng', href: '/admin/users' },
+  { icon: MessageSquare, label: 'Tin nhắn', href: '/admin/messages' },
 ]
 
 export function AdminSidebar() {

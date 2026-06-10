@@ -2,10 +2,12 @@ import { Sidebar } from '@/shared/components/Sidebar'
 import { RightRail } from '@/shared/components/RightRail'
 import { AuthGuard } from '@/shared/components/AuthGuard'
 import { AdminViewingBanner } from '@/shared/components/AdminViewingBanner'
+import { RealtimeProvider } from '@/shared/components/RealtimeProvider'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthGuard>
+      <RealtimeProvider>
       <div className="min-h-screen">
         <a
           href="#main-content"
@@ -31,6 +33,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           </aside>
         </div>
       </div>
+      </RealtimeProvider>
     </AuthGuard>
   )
 }
