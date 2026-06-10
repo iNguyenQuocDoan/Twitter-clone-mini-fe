@@ -5,8 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { isAxiosError } from 'axios'
 import { messagesService } from '../services/messages.service'
-import { useSocketEvent } from '@/shared/hooks/use-socket'
-import { getSocket } from '@/shared/services/socket-client'
+import { useSocket, useSocketEvent } from '@/shared/hooks/use-socket'
 import type { Conversation, Message } from '../types'
 
 export const messageKeys = {
@@ -39,9 +38,19 @@ export const useSendMessage = (conversationId: string | null) => {
       if (!conversationId) throw new Error('No conversation selected')
       return messagesService.sendMessage(conversationId, content).then((r) => r.data.data)
     },
-    onSuccess: () => {
-      // Socket event will also fan-out; this is a safety refresh for the sender.
+    onSuccess: (newMsg) => {
       queryClient.invalidateQueries({ queryKey: messageKeys.conversations() })
+      // Patch the chat detail cache directly so the sender sees their own
+      // message immediately without depending on the socket roundtrip. The
+      // realtime handler deduplicates by _id so this won't double-render.
+      if (conversationId) {
+        queryClient.setQueryData(messageKeys.conversation(conversationId), (old: any) => {
+          if (!old) return old
+          const exists = old.data?.some((m: Message) => m._id === newMsg._id)
+          if (exists) return old
+          return { ...old, data: [...old.data, newMsg] }
+        })
+      }
     },
     onError: (err) => {
       const msg = isAxiosError(err)
@@ -92,19 +101,27 @@ export function useRealtimeMessages() {
 }
 
 /**
- * Join/leave a conversation room on the socket while this hook is mounted.
- * Used by the chat panel.
+ * Join/leave a conversation room while this hook is mounted.
+ * Crucially: re-emits `conv:join` on EVERY socket reconnect, because
+ * socket.io rooms are reset server-side when a connection is closed.
+ * Without this, a transient disconnect (which happens often in dev
+ * with Next.js HMR) silently drops the room membership and
+ * message:new events stop reaching the chat panel.
  */
 export function useJoinConversation(conversationId: string | null) {
+  const { socket } = useSocket()
   useEffect(() => {
-    if (!conversationId) return
-    const s = getSocket()
-    if (!s) return
-    s.emit('conv:join', conversationId)
+    if (!conversationId || !socket) return
+    const join = () => socket.emit('conv:join', conversationId)
+    if (socket.connected) join()
+    // Re-emit on every reconnect — socket.io rooms reset server-side on
+    // disconnect, so without this a transient drop silently breaks delivery.
+    socket.on('connect', join)
     return () => {
-      s.emit('conv:leave', conversationId)
+      socket.off('connect', join)
+      if (socket.connected) socket.emit('conv:leave', conversationId)
     }
-  }, [conversationId])
+  }, [conversationId, socket])
 }
 
 export const useAdminConversations = () =>

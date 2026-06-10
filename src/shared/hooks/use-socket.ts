@@ -1,30 +1,31 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { Socket } from 'socket.io-client'
 import { connectSocket, disconnectSocket } from '@/shared/services/socket-client'
 import { useAuthStore } from '@/shared/stores/auth.store'
 
 /**
  * Establish (or reuse) the singleton socket while a logged-in user exists.
- * Returns `{ socket, connected }`. The socket survives navigation between
- * pages because it lives in the module-level singleton.
+ * Returns `{ socket, connected }`. Both pieces of state are tracked via
+ * useState — using a ref for the socket made consumers miss the moment the
+ * socket became available because ref mutations don't trigger re-renders.
  */
 export function useSocket() {
   const user = useAuthStore((s) => s.user)
+  const [socket, setSocket] = useState<Socket | null>(null)
   const [connected, setConnected] = useState(false)
-  const socketRef = useRef<Socket | null>(null)
 
   useEffect(() => {
     if (!user) {
       disconnectSocket()
-      socketRef.current = null
+      setSocket(null)
       setConnected(false)
       return
     }
 
     const s = connectSocket()
-    socketRef.current = s
+    setSocket(s)
     setConnected(s.connected)
 
     const onConnect = () => setConnected(true)
@@ -35,12 +36,10 @@ export function useSocket() {
     return () => {
       s.off('connect', onConnect)
       s.off('disconnect', onDisconnect)
-      // Do NOT disconnect here — other components may still need the socket.
-      // Disconnect happens on logout (via clearAuth flow) or unmount of provider.
     }
   }, [user])
 
-  return { socket: socketRef.current, connected }
+  return { socket, connected }
 }
 
 /** Subscribe to a socket event for the lifetime of the calling component. */

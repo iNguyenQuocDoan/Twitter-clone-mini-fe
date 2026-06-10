@@ -7,24 +7,32 @@ const URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:9990'
 
 let socket: Socket | null = null
 
-/**
- * Singleton socket.io client. Reconnects automatically.
- * Token attached lazily — caller should re-call `connectSocket()` after login
- * to ensure the freshest token is used.
- */
 export function getSocket(): Socket | null {
   return socket
 }
 
+/**
+ * Idempotent singleton getter — returns the SAME Socket instance forever
+ * (until disconnectSocket() is explicitly called on logout). socket.io's
+ * Manager handles reconnects internally on this single instance, so any
+ * listener attached via socket.on(...) survives every reconnect.
+ *
+ * Previous versions either:
+ *  - killed any not-yet-connected socket on subsequent calls (caused 7×
+ *    "WebSocket closed before handshake" warnings), or
+ *  - rebuilt the socket whenever it was disconnected (orphaned every
+ *    listener and silently broke message:new delivery).
+ */
 export function connectSocket(): Socket {
-  if (socket && socket.connected) return socket
-  if (socket) {
-    socket.disconnect()
-  }
+  if (socket) return socket
   socket = io(URL, {
     autoConnect: true,
     transports: ['websocket', 'polling'],
     auth: { token: getToken() ?? '' },
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 500,
+    reconnectionDelayMax: 5000,
   })
   return socket
 }
