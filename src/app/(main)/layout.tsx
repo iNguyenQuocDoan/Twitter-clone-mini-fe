@@ -21,16 +21,18 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           <main
             id="main-content"
             aria-label="Nội dung chính"
-            className="flex-1 min-w-0 border-x border-border max-w-160"
+            className="flex-1 min-w-0 border-x border-border"
           >
+            {/*
+              Pages that want narrow Twitter-style feed content wrap themselves
+              in MainContentContainer. /messages does NOT — it needs full
+              available width for the conv list + chat panel split.
+            */}
             {children}
           </main>
-          <aside
-            aria-label="Khám phá"
-            className="w-80 shrink-0 p-4 hidden xl:block"
-          >
-            <RightRail />
-          </aside>
+          <RightRail />
+          {/* RightRail self-hides on /messages so chat takes the full
+              main column width */}
         </div>
       </div>
       </RealtimeProvider>

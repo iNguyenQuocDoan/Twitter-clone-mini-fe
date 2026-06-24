@@ -5,6 +5,7 @@ import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { TweetCard, TweetCardSkeleton, useTweet } from '@/features/tweets'
+import { MainContentContainer } from '@/shared/components/MainContentContainer'
 
 export default function TweetDetailPage({ params }: { params: Promise<{ tweet_id: string }> }) {
   const { tweet_id } = use(params)
@@ -12,7 +13,7 @@ export default function TweetDetailPage({ params }: { params: Promise<{ tweet_id
   const { data: tweet, isLoading, isError } = useTweet(tweet_id)
 
   return (
-    <div>
+    <MainContentContainer>
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b px-4 py-3 flex items-center gap-4">
         <Button variant="ghost" size="icon" onClick={() => router.back()}>
           <ArrowLeft className="size-5" />
@@ -27,6 +28,6 @@ export default function TweetDetailPage({ params }: { params: Promise<{ tweet_id
         </div>
       )}
       {tweet && <TweetCard tweet={tweet} />}
-    </div>
+    </MainContentContainer>
   )
 }

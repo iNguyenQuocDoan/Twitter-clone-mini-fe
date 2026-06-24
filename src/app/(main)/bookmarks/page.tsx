@@ -5,6 +5,7 @@ import { Bookmark as BookmarkIcon, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { TweetCard, TweetCardSkeleton } from '@/features/tweets'
 import { useBookmarks } from '@/features/interactions'
+import { MainContentContainer } from '@/shared/components/MainContentContainer'
 
 export default function BookmarksPage() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } =
@@ -31,7 +32,7 @@ export default function BookmarksPage() {
   const total = data?.pages[0]?.meta.total ?? 0
 
   return (
-    <>
+    <MainContentContainer>
       <header className="sticky top-0 z-10 bg-background/70 backdrop-blur-md border-b border-border px-4 py-3">
         <h1 className="text-[15px] font-semibold tracking-tight">Bookmarks</h1>
         {!isLoading && (
@@ -84,6 +85,6 @@ export default function BookmarksPage() {
           </div>
         </div>
       )}
-    </>
+    </MainContentContainer>
   )
 }

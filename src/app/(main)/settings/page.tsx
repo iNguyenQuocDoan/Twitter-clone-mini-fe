@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { EditProfileForm, ChangePasswordForm } from '@/features/users'
+import { MainContentContainer } from '@/shared/components/MainContentContainer'
 
 export default function SettingsPage() {
   const router = useRouter()
 
   return (
-    <>
+    <MainContentContainer>
       <header className="sticky top-0 z-10 bg-background/70 backdrop-blur-md border-b border-border px-4 py-3 flex items-center gap-3">
         <Button
           variant="ghost"
@@ -56,6 +57,6 @@ export default function SettingsPage() {
           <ChangePasswordForm />
         </TabsContent>
       </Tabs>
-    </>
+    </MainContentContainer>
   )
 }

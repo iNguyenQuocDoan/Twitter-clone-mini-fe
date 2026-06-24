@@ -10,6 +10,7 @@ import {
   ProfileTweets,
   useProfile,
 } from '@/features/users'
+import { MainContentContainer } from '@/shared/components/MainContentContainer'
 
 export default function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = use(params)
@@ -17,7 +18,7 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
   const { data: profile, isLoading, isError } = useProfile(username)
 
   return (
-    <>
+    <MainContentContainer>
       <header className="sticky top-0 z-10 bg-background/70 backdrop-blur-md border-b border-border px-4 py-3 flex items-center gap-3">
         <Button
           variant="ghost"
@@ -53,6 +54,6 @@ export default function ProfilePage({ params }: { params: Promise<{ username: st
           <ProfileTweets username={profile.username} />
         </>
       )}
-    </>
+    </MainContentContainer>
   )
 }

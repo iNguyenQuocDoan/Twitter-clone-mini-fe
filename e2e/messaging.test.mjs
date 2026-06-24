@@ -49,9 +49,11 @@ async function openMessages(page) {
   await page.goto(`${FE}/messages`, { waitUntil: 'networkidle' })
 }
 
-async function selectConversation(page, peerUsername) {
-  // ConversationList items expose @username in the second line
-  const item = page.locator('button', { hasText: `@${peerUsername}` }).first()
+async function selectConversation(page, peerName) {
+  // ConversationList renders peer.name in the row's first <p>. Match the
+  // conversation list <aside> button containing that name.
+  const list = page.locator('aside[aria-label="Danh sách trò chuyện"]')
+  const item = list.locator('button', { hasText: peerName }).first()
   await item.waitFor({ state: 'visible', timeout: 5000 })
   await item.click()
 }
@@ -94,11 +96,11 @@ async function main() {
     await shot(an, '01-an-messages')
     await shot(binh, '01-binh-messages')
 
-    await step('an selects conv with binh_designer', () =>
-      selectConversation(an, 'binh_designer'),
+    await step('an selects conv with Binh Tran', () =>
+      selectConversation(an, 'Binh Tran'),
     )
-    await step('binh selects conv with an_dev', () =>
-      selectConversation(binh, 'an_dev'),
+    await step('binh selects conv with An Nguyen', () =>
+      selectConversation(binh, 'An Nguyen'),
     )
 
     const probe = `__realtime probe ${Date.now()}__`
